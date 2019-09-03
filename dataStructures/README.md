@@ -9,3 +9,8 @@ A data structure is chosen based on the problem type and the operations performe
 ### Lists
 
 A list is a sequence of elements. Each element can be connected to another with a link in a forward or backward direction.
+
+
+### Tuples
+
+A tuple is a finite sorted list of elements. It is a data structure that groups data. Tuples are typically immutable sequential collections. A database record is referred to as tuple.
