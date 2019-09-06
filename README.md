@@ -1,4 +1,4 @@
-# Go Data Structures and Algorithms
+# Go Data Structures, Algorithms and Design Patterns
 
 In the quest to continue learning, build better softwares with efficient algorithms with thought of algorithm complexity and also deepening my understanding of Go language.
 
