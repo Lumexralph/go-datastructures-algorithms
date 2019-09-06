@@ -27,8 +27,8 @@ func TestPowerSeriesTwo(t *testing.T) {
 	}{
 		{2, 4, 8},
 		{3, 9, 27},
-		{1, 1, 0},
-		{4, 16, 63},
+		{1, 1, 1},
+		{4, 16, 64},
 	}
 
 	// run the multiple testcases
@@ -48,5 +48,29 @@ func TestPowerSeriesTwo(t *testing.T) {
 
 		})
 
+	}
+}
+
+
+// To know the performance of the powerSeries function
+func BenchmarkPowerSeries(b *testing.B) {
+
+	benchmarks := []struct{
+		name string
+		val int
+		expectedvalueA int
+		expectedValueB int
+	} {
+		{"Powerseries of 5", 5, 25, 125},
+		{"Powerseries of 9", 9, 81, 729},
+		{"Powerseries of 2", 2, 4, 8},
+	}
+
+	for _, bm := range benchmarks {
+		b.Run(bm.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				powerSeries(bm.val)
+			}
+		})
 	}
 }

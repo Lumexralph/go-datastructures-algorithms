@@ -1,5 +1,10 @@
 package main
 
+import (
+	"container/heap"
+	"fmt"
+)
+
 // IntegerHeap - a slice of int type
 type IntegerHeap []int
 
@@ -37,8 +42,34 @@ func (iheap *IntegerHeap) Push(heapItem interface{}) {
 func (iheap *IntegerHeap) Pop() interface{} {
 	var (
 		n, x1 int
+
+		// hold a reference to the
+		previous = *iheap
 	)
 
-	// hold a reference to the 
-	previous := *iheap
+	n = len(previous)
+	x1 = previous[n-1]
+
+	*iheap = previous[0 : n-1]
+
+	return x1
+
+}
+
+func main() {
+
+	// take a pointer to the heap
+	var intHeap = &IntegerHeap{8, 6, 5, 9}
+
+	// the inbuilt heap operation
+	// create the heap with the heap order property in
+	// ascending order
+	heap.Init(intHeap)
+	heap.Push(intHeap, 89)
+
+	fmt.Printf("minimum from the heap %d \n", (*intHeap)[0])
+
+	for intHeap.Len() > 0 {
+		fmt.Printf("%d \n", heap.Pop(intHeap))
+	}
 }
