@@ -24,3 +24,12 @@ Complexity and performance analysis
 
 - Backtracking algorithms
 
+## Notes stored as go playground
+
+[Pointers](https://play.golang.org/p/H7MoIWffzGD)
+
+[Pass Function Argument by value](https://play.golang.org/p/tJwjuZupz25)
+
+[Pass Function Argument by reference](https://play.golang.org/p/fB3xZ814Axi)
+
+[Nil Pointer](https://play.golang.org/p/l3D3LqKnh8H): When you are working with pointers, there is a potential for the program to panic. To avoid panicking, you should check to see if a pointer value is nil prior to trying to access any of the fields or methods defined on it.
