@@ -64,6 +64,41 @@ func(linkedList *LinkedList) AddToEnd(property int) {
 	}
 }
 
+// GetNodeWithValue method of LinkedList returns the
+// node with the property value
+func (linkedList *LinkedList) GetNodeWithValue(property int) *Node {
+	var foundNode *Node
+
+	node := linkedList.headNode
+
+	for node != nil {
+		if node.property == property {
+			foundNode = node
+			break
+		}
+		node = node.nextNode
+	}
+
+	return foundNode
+}
+
+// AddAfter method adds the node after a specific node
+func (linkedList *LinkedList) AddAfter(nodeProperty int, newProperty int) {
+	// create a new node
+	newNode := &Node{
+		property: newProperty,
+		nextNode: nil,
+	}
+	// attach the nextNode of the current node to the new node
+	currentNode := linkedList.GetNodeWithValue(nodeProperty)
+
+	// attach the nextNode of the new node to the initial nextNode
+	if currentNode != nil {
+		newNode.nextNode = currentNode.nextNode
+		currentNode.nextNode = newNode
+	}
+}
+
 func main() {
 	linkedList := LinkedList{}
 
@@ -74,5 +109,8 @@ func main() {
 	fmt.Printf("The head node has a property %d\n", linkedList.headNode.property)
 
 	linkedList.AddToEnd(5)
+	linkedList.AddToEnd(7)
+	fmt.Printf("Found Node %v \n", linkedList.GetNodeWithValue(7).property)
+	linkedList.AddAfter(5, 9)
 	linkedList.IterateList()
 }
