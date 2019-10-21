@@ -22,9 +22,12 @@ func (doublyLinkedList *DoublyLinkedList) NodeBetweenValues(firstProperty string
 	node := doublyLinkedList.headNode
 
 	for node != nil {
+		fmt.Println(node.property)
 		// check if the node is between the two properties
-		if node.prevNode.property == firstProperty && node.nextNode.property == secondProperty {
-			return node
+		if node.prevNode != nil && node.nextNode != nil {
+			if node.prevNode.property == firstProperty && node.nextNode.property == secondProperty {
+				return node
+			}
 		}
 
 		node = node.nextNode
@@ -52,9 +55,42 @@ func (doublyLinkedList *DoublyLinkedList) AddToHead(property string) {
 	doublyLinkedList.headNode = newNode
 }
 
+// NodeWithValue get a node that matches the property in the doubly linked list
+func (doublyLinkedList *DoublyLinkedList) NodeWithValue(property string) *Node {
+	node := doublyLinkedList.headNode
+
+	for node != nil {
+		if node.property == property {
+			return node
+		}
+
+		node = node.nextNode
+	}
+
+	return nil
+}
+
+// AddAfter method adds a node after a specific node to a double linked list
+func (doublyLinkedList *DoublyLinkedList) AddAfter(property string, newProperty string) {
+	// get node with the existing property
+	existingNode := doublyLinkedList.NodeWithValue(property)
+	nodeAfterExistingNode := existingNode.nextNode
+
+	// create new node
+	newNode := &Node{
+		property: newProperty,
+		nextNode: nodeAfterExistingNode,
+		prevNode: existingNode,
+	}
+	existingNode.nextNode = newNode
+}
+
 func main() {
 	doublyLinkedList := DoublyLinkedList{}
-	doublyLinkedList.AddToHead("c")
 
-	fmt.Printf("The node between properties %v", doublyLinkedList.NodeBetweenValues("a", "b"))
+	doublyLinkedList.AddToHead("c")
+	doublyLinkedList.AddAfter("c", "d")
+	doublyLinkedList.AddAfter("d", "e")
+
+	fmt.Printf("The node between properties %v \n", doublyLinkedList.NodeBetweenValues("c", "e").property)
 }
