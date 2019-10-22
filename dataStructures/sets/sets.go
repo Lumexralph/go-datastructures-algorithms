@@ -32,8 +32,40 @@ func (set *Set) ContainsElement(element int) bool {
 	return exists
 }
 
+// InterSect method returns another set with elements that exists in two sets
+func (set *Set) InterSect(anotherSet *Set) *Set {
+	intersectSet := &Set{}
+
+	intersectSet.New()
+
+	for element := range set.integerMap {
+		if anotherSet.ContainsElement(element) {
+			intersectSet.AddElement(element)
+		}
+	}
+
+	return intersectSet
+}
+
+// Union method returns a set that consists of elements of two sets
+func (set *Set) Union(anotherSet *Set) *Set {
+	unionSet := &Set{}
+	unionSet.New()
+
+	for element := range set.integerMap {
+		unionSet.AddElement(element)
+	}
+
+	for element := range anotherSet.integerMap {
+		unionSet.AddElement(element)
+	}
+
+	return unionSet
+}
+
 func main() {
 	set := &Set{}
+	anotherSet := &Set{}
 
 	set.New()
 	set.AddElement(2)
@@ -41,8 +73,14 @@ func main() {
 	set.AddElement(5)
 	set.AddElement(5)
 
+	anotherSet.New()
+	anotherSet.AddElement(4)
+	anotherSet.AddElement(6)
+	anotherSet.AddElement(2)
+	anotherSet.AddElement(3)
+
 	fmt.Println(set.ContainsElement(2))
 	fmt.Println(set.ContainsElement(4))
-
-	fmt.Println(set)
+	fmt.Println("Union ", set.Union(anotherSet))
+	fmt.Println("Intersect ", set.InterSect(anotherSet))
 }
