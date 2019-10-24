@@ -1,13 +1,17 @@
 package main
 
+import (
+	"fmt"
+)
+
 // Queue data structure, it will be a list of Orders
 type Queue []*Order
 
 // Order data type
 type Order struct {
-	priority int
-	quantity int
-	product string
+	priority     int
+	quantity     int
+	product      string
 	customerName string
 }
 
@@ -50,5 +54,21 @@ func (queue *Queue) Add(order *Order) {
 		if !appended {
 			*queue = append(*queue, order)
 		}
+	}
+}
+
+func main() {
+	queue := make(Queue, 0)
+	order1 := &Order{}
+	order1.New(2, 20, "Computer", "Andela")
+
+	order2 := &Order{}
+	order2.New(1, 30, "Memory", "Westgate")
+
+	queue.Add(order1)
+	queue.Add(order2)
+
+	for _, order := range queue {
+		fmt.Printf("Order %v \n", order)
 	}
 }
