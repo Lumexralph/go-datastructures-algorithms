@@ -1,10 +1,18 @@
+/*
+Package main implements a priority queue data structure.
+
+Queues are commonly used for storing tasks that need to be done
+or incoming HTTP requests that need to be processed by a server.
+Handling interruptions in real-time systems, call handling,
+and CPU task scheduling are good examples for using queues.
+*/
 package main
 
 import (
 	"fmt"
 )
 
-// Queue data structure, it will be a list of Orders
+// Queue data structure, it will be a list of Orders.
 type Queue []*Order
 
 // Order data type
@@ -15,60 +23,58 @@ type Order struct {
 	customerName string
 }
 
-// New method creates a new order with required properties
-func (order *Order) New(priority, quantity int, product, customerName string) {
-	order.priority = priority
-	order.quantity = quantity
-	order.product = product
-	order.customerName = customerName
+// newOrder function contructs a new order.
+func newOrder(priority, quantity int, product, customerName string) *Order {
+	return &Order{
+		priority: priority,
+		quantity: quantity,
+		product: product,
+		customerName: customerName,
+	}
 }
 
-// Add method takes an order and adds it to the queue based on priority
-func (queue *Queue) Add(order *Order) {
-	if len(*queue) == 0 {
-		*queue = append(*queue, order)
+// Add method takes an order and adds it to the queue based on priority.
+func (q *Queue) Add(order *Order) {
+	if len(*q) == 0 {
+		*q = append(*q, order)
 	} else {
-		appended := false
+		var appended bool
 
-		for i, existingOrder := range *queue {
+		for i, existingOrder := range *q {
 			if order.priority > existingOrder.priority {
 				// since order has a higher priority than the existing order
 				// make a slice till the index
-				initialQueue := (*queue)[:i]
+				start := (*q)[:i]
 
 				// make anaother slice of the remaining queue starting from the
 				// index we noticed the change in priority
-				remainingQueue := (*queue)[i:]
+				end := (*q)[i:]
 
-				// create a new queue with the new order
 				// set new order at the beginning of the remaining queue
-				newQueue := Queue{order}
-				newQueue = append(newQueue, remainingQueue...)
+				start = append(start, order)
 
 				// concatenate or join all the queue into one with the
-				*queue = append(initialQueue, newQueue...)
+				*q = append(start, end...)
 				appended = true
 			}
 		}
 
 		if !appended {
-			*queue = append(*queue, order)
+			*q = append(*q, order)
 		}
 	}
 }
 
 func main() {
-	queue := make(Queue, 0)
-	order1 := &Order{}
-	order1.New(2, 20, "Computer", "Andela")
+	q := make(Queue, 0)
 
-	order2 := &Order{}
-	order2.New(1, 30, "Memory", "Westgate")
+	order1 := newOrder(2, 20, "Computer", "Andela")
+	order2 := newOrder(1, 30, "Memory", "Westgate")
 
-	queue.Add(order1)
-	queue.Add(order2)
+	q.Add(order1)
+	q.Add(order2)
 
-	for _, order := range queue {
+	for _, order := range q {
 		fmt.Printf("Order %v \n", order)
 	}
 }
