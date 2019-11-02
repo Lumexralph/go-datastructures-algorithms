@@ -27,6 +27,7 @@ Complexity and performance analysis
 ## Notes stored as go playground
 
 [DynamicArray](https://play.golang.org/p/G2T4D6Ybs1D) - the array or list data structures in JavaScript and Python respectively 
+
 [Pointers](https://play.golang.org/p/H7MoIWffzGD)
 
 [Pass Function Argument by value](https://play.golang.org/p/tJwjuZupz25)
