@@ -36,7 +36,7 @@ func newOrder(priority, quantity int, product, customerName string) *Order {
 // Add method takes an order and adds it to the queue based on priority.
 func (q *Queue) Add(order *Order) {
 	if len(*q) == 0 {
-		*q = append(*q, order)
+		*q = Queue{order}
 	} else {
 		var appended bool
 
