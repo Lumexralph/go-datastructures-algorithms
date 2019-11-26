@@ -1,8 +1,8 @@
 package main
 
 import (
-	"reflect"
 	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -43,7 +43,7 @@ func TestNewOrder(t *testing.T) {
 				// arguments too. Even if the test name is TestNewOrder, an error message
 				// should contain all the information needed to debug it.
 				t.Errorf("newOrder(%d, %d, %q, %q) got %+v; want %+v", tc.priority, tc.quantity, tc.product, tc.customerName, got, tc.want)
-			  }
+			}
 		})
 	}
 }
@@ -53,19 +53,19 @@ func TestAddToQueue(t *testing.T) {
 		o1, o2 *Order
 		want   int
 	}{
-		{&Order{1, 20, "macbook", "andela"}, &Order{2, 30, "windows", "apple"}, 2},
-		{&Order{3, 20, "macbook", "andela"}, &Order{4, 30, "windows", "apple"}, 4},
-		{&Order{5, 20, "macbook", "andela"}, &Order{6, 30, "windows", "apple"}, 6},
+		{&Order{1, 20, "macbook", "andela"}, &Order{2, 30, "windows", "apple"}, 1},
+		{&Order{3, 20, "macbook", "andela"}, &Order{4, 30, "windows", "apple"}, 3},
+		{&Order{5, 20, "macbook", "andela"}, &Order{6, 30, "windows", "apple"}, 5},
 	}
 
 	for _, tc := range cases {
 		t.Run(fmt.Sprintf("orders with priority %d and %d", tc.o1.priority, tc.o2.priority), func(t *testing.T) {
-			q := make(Queue, 0)
+			q := new(Queue)
 			q.Add(tc.o1)
 			q.Add(tc.o2)
 
-			if q[0].priority != tc.want {
-				t.Errorf("got %d, want %d", q[0].priority, tc.want)
+			if (*q)[0].priority != tc.want {
+				t.Errorf("got %d, want %d", (*q)[0].priority, tc.want)
 			}
 		})
 	}
@@ -73,26 +73,26 @@ func TestAddToQueue(t *testing.T) {
 }
 
 func TestAddToEmptyQueue(t *testing.T) {
-	cases := []struct{
-		name string
-		priorities []int  // order quantities will be equal to their index in the slice
+	cases := []struct {
+		name           string
+		priorities     []int // order quantities will be equal to their index in the slice
 		wantQuantities []int
 	}{
 		{
-			name: "multiple equal priorities",
-			priorities: []int{3, 8, 2, 5, 3, 3, 2, 3, 2},
+			name:           "multiple equal priorities",
+			priorities:     []int{3, 8, 2, 5, 3, 3, 2, 3, 2},
 			wantQuantities: []int{2, 6, 8, 0, 4, 5, 7, 3, 1}, //It's an argsort https://stackoverflow.com/questions/17901218/numpy-argsort-what-is-it-doing
 			// (if the slice was sorted, where the element will be using their index in the priorities slice)
 		},
 	}
 
 	for _, tc := range cases {
-		t.Run(tc.name, func(t *testing.T){
+		t.Run(tc.name, func(t *testing.T) {
 			q := &Queue{}
 
 			var orders []*Order
 			for i, p := range tc.priorities {
-				o := newOrder(p, i, "", "") 	// using the index of the slice as the quantity
+				o := newOrder(p, i, "", "") // using the index of the slice as the quantity
 				orders = append(orders, o)
 				q.Add(o)
 			}
