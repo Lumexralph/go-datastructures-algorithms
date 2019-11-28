@@ -45,25 +45,42 @@ func (q *Queue) Add(order *Order) {
 		*q = Queue{order}
 	} else {
 		var appended bool
+		var insert int
+
+		// using binary-search to know index to insert the order.
+		lowIndex := 0
+		highIndex := len(*q) - 1
 
 	QLoop:
-		for i, existingOrder := range *q {
-			var insert int
+		for lowIndex <= highIndex {
+
+			midPoint := (lowIndex + highIndex) / 2
+			guessOrder := (*q)[midPoint]
 
 			switch {
-			case order.priority < existingOrder.priority:
-				insert = i
-			case order.priority == existingOrder.priority:
-				insert = 1 + i
-				// peek to check next order in the queue.
-				if insert < len(*q) && (*q)[insert].priority == order.priority {
-					// keep looking for the best location to insert.
-					continue QLoop
-				}
+			case order.priority < guessOrder.priority:
+				// we move closer to the left-side
+				highIndex = midPoint - 1
+			case order.priority > guessOrder.priority:
+				// we move to the right-side of the queue
+				lowIndex = midPoint + 1
 			default:
-				continue QLoop
+				// when the priority is equal
+				// peek to the next order to check the priority
+				nextIndex := midPoint + 1
+				if nextIndex < len(*q) && order.priority == (*q)[nextIndex].priority {
+					// found the insertion point
+					insert = nextIndex
+					appended = true
+					break QLoop
+				}
+				lowIndex = midPoint + 1
 			}
+			insert = lowIndex
+			appended = true
+		}
 
+		if appended {
 			// make a slice till the index.
 			start := (*q)[:insert]
 
@@ -75,15 +92,13 @@ func (q *Queue) Add(order *Order) {
 
 			// concatenate or join all the queue into one with the.
 			*q = append(start, end...)
-			appended = true
-			break
-		}
 
-		if !appended {
+		} else {
 			*q = append(*q, order)
 		}
 	}
 }
+
 
 func main() {
 	q := new(Queue)
