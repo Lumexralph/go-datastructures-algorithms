@@ -33,8 +33,8 @@ func newOrder(priority, quantity int, product, customerName string) *Order {
 	}
 }
 
-// create a copy of the slice to avoid referencing same memory location
-// when adding new order to the slice
+// copyQ creates a copy of the slice to avoid referencing same memory location
+// when adding new order to the slice.
 func copyQ(q Queue) Queue {
 	return append(Queue{}, q...)
 }
@@ -46,52 +46,37 @@ func (q *Queue) Add(order *Order) {
 	} else {
 		var appended bool
 
+	QLoop:
 		for i, existingOrder := range *q {
-			if order.priority < existingOrder.priority {
-				// since order has a higher priority than the existing order
-				// make a slice till the index
-				start := (*q)[:i]
+			var insert int
 
-				// make anaother slice of the remaining queue starting from the
-				// index we noticed the change in priority
-				end := copyQ((*q)[i:])
-
-				// set new order at the beginning of the remaining queue
-				start = append(start, order)
-
-				// concatenate or join all the queue into one with the
-				*q = append(start, end...)
-				appended = true
-				break
-			}
-
-			if order.priority == existingOrder.priority {
-				nextIndex := i + 1
-
-				// peek to check next order in the queue
-				if nextIndex < len(*q) && order.priority == (*q)[nextIndex].priority {
-					// move on in the queue to ensure no order has same priority
-					continue
+			switch {
+			case order.priority < existingOrder.priority:
+				insert = i
+			case order.priority == existingOrder.priority:
+				insert = 1 + i
+				// peek to check next order in the queue.
+				if insert < len(*q) && (*q)[insert].priority == order.priority {
+					// keep looking for the best location to insert.
+					continue QLoop
 				}
-
-				// if the priority levels are same e.g 2 == 2
-				// append the order after the existing order with same priority
-				// make a slice including the existing order
-				start := (*q)[:nextIndex]
-
-				// make another slice to have the remaining orders
-				end := copyQ((*q)[nextIndex:])
-
-				// add the new order
-				start = append(start, order)
-
-				// concatenate or join all the queue into one with the
-				*q = append(start, end...)
-				appended = true
-				break
-
+			default:
+				continue QLoop
 			}
 
+			// make a slice till the index.
+			start := (*q)[:insert]
+
+			// make another slice to have the remaining orders.
+			end := copyQ((*q)[insert:])
+
+			// add the new order
+			start = append(start, order)
+
+			// concatenate or join all the queue into one with the.
+			*q = append(start, end...)
+			appended = true
+			break
 		}
 
 		if !appended {
@@ -102,7 +87,7 @@ func (q *Queue) Add(order *Order) {
 
 func main() {
 	q := new(Queue)
-	// 3, 8, 2, 5, 3, 3, 2, 3, 2
+
 	order1 := newOrder(2, 20, "Computer", "Andela")
 	order2 := newOrder(1, 30, "Memory", "Westgate")
 	order3 := newOrder(1, 30, "cpu", "Westside")
