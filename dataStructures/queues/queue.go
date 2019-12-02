@@ -41,17 +41,20 @@ func copyQ(q Queue) Queue {
 
 // Add method takes an order and adds it to the queue based on priority.
 func (q *Queue) Add(order *Order) {
+	var appended bool
+
 	if len(*q) == 0 {
 		*q = Queue{order}
+	} else if len(*q) == 1{
+		if (*q)[0].priority > order.priority {
+			*q = []*Order{order, (*q)[0]}
+			appended = true
+		}
 	} else {
-		var appended bool
-		var insert int
-
 		// using binary-search to know index to insert the order.
 		lowIndex := 0
 		highIndex := len(*q) - 1
-
-	QLoop:
+QLoop:
 		for lowIndex <= highIndex {
 
 			midPoint := (lowIndex + highIndex) / 2
@@ -64,36 +67,26 @@ func (q *Queue) Add(order *Order) {
 			case order.priority > guessOrder.priority:
 				// we move to the right-side of the queue
 				lowIndex = midPoint + 1
-			default:
-				// when the priority is equal
-				// peek to the next order to check the priority
-				nextIndex := midPoint + 1
-				if nextIndex < len(*q) && order.priority == (*q)[nextIndex].priority {
-					// found the insertion point
-					insert = nextIndex
-					appended = true
-					break QLoop
-				}
-				lowIndex = midPoint + 1
-			}
-			insert = lowIndex
-			appended = true
-		}
 
-		if appended {
-			// make a slice till the index.
-			start := (*q)[:insert]
+			case order.priority == guessOrder.priority || lowIndex == highIndex:
+				// make a slice till the index.
+			start := (*q)[:midPoint]
 
 			// make another slice to have the remaining orders.
-			end := copyQ((*q)[insert:])
+			end := copyQ((*q)[midPoint:])
 
 			// add the new order
 			start = append(start, order)
 
 			// concatenate or join all the queue into one with the.
 			*q = append(start, end...)
+			appended = true
+			break QLoop
+			}
 
-		} else {
+		}
+
+		if !appended  {
 			*q = append(*q, order)
 		}
 	}
