@@ -43,7 +43,7 @@ func copyQ(q Queue) Queue {
 func (q *Queue) Add(order *Order) {
 	var appended bool
 
-	if len(*q) == 1{
+	if len(*q) == 1 {
 		if (*q)[0].priority > order.priority {
 			*q = []*Order{order, (*q)[0]}
 			appended = true
@@ -52,7 +52,7 @@ func (q *Queue) Add(order *Order) {
 		// using binary-search to know index to insert the order.
 		lowIndex := 0
 		highIndex := len(*q) - 1
-QLoop:
+	QLoop:
 		for lowIndex <= highIndex {
 
 			midPoint := (lowIndex + highIndex) / 2
@@ -67,29 +67,32 @@ QLoop:
 				lowIndex = midPoint + 1
 
 			case order.priority == guessOrder.priority || lowIndex == highIndex:
+				insert := midPoint
+				for insert < len(*q) && (*q)[insert].priority == order.priority {
+					insert++
+				}
 				// make a slice till the index.
-			start := (*q)[:midPoint]
+				start := (*q)[:insert]
 
-			// make another slice to have the remaining orders.
-			end := copyQ((*q)[midPoint:])
+				// make another slice to have the remaining orders.
+				end := copyQ((*q)[insert:])
 
-			// add the new order
-			start = append(start, order)
+				// add the new order
+				start = append(start, order)
 
-			// concatenate or join all the queue into one with the.
-			*q = append(start, end...)
-			appended = true
-			break QLoop
+				// concatenate or join all the queue into one with the.
+				*q = append(start, end...)
+				appended = true
+				break QLoop
 			}
 
 		}
 
-		if !appended  {
+		if !appended {
 			*q = append(*q, order)
 		}
 	}
 }
-
 
 func main() {
 	q := new(Queue)
@@ -103,6 +106,7 @@ func main() {
 	order7 := newOrder(2, 30, "nadia", "southside")
 	order8 := newOrder(2, 30, "gamers", "southside")
 	order9 := newOrder(3, 30, "psygame", "easthside")
+	order10 := newOrder(2, 37, "pc", "mixedreality")
 
 	q.Add(order1)
 	q.Add(order2)
@@ -113,6 +117,7 @@ func main() {
 	q.Add(order7)
 	q.Add(order8)
 	q.Add(order9)
+	q.Add(order10)
 
 	for _, order := range *q {
 		fmt.Printf("Order %v \n", order)
