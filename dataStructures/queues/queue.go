@@ -39,51 +39,51 @@ func copyQ(q Queue) Queue {
 	return append(Queue{}, q...)
 }
 
-// Add method takes an order and adds it to the queue based on priority.
-func (q *Queue) Add(order *Order) {
-	if len(*q) == 0 {
-		*q = Queue{order}
-	} else {
-		var appended bool
+// binarySearch method will help to pick a slot to fix the next order
+// with complexity of Olog(n)
+func getInsertionSlot(q Queue, value int) int {
+	low := 0
+	high := len(q) - 1
 
-	QLoop:
-		for i, existingOrder := range *q {
-			var insert int
+	for low <= high {
+		mid := (high + low) / 2
 
-			switch {
-			case order.priority < existingOrder.priority:
-				insert = i
-			case order.priority == existingOrder.priority:
-				insert = 1 + i
-				// peek to check next order in the queue.
-				if insert < len(*q) && (*q)[insert].priority == order.priority {
-					// keep looking for the best location to insert.
-					continue QLoop
-				}
-			default:
-				continue QLoop
+		switch {
+		case q[mid].priority == value:
+			if (mid+1) < len(q) && q[mid+1].priority == value {
+				low = mid + 1
+			} else {
+				return mid + 1
 			}
-
-			// make a slice till the index.
-			start := (*q)[:insert]
-
-			// make another slice to have the remaining orders.
-			end := copyQ((*q)[insert:])
-
-			// add the new order
-			start = append(start, order)
-
-			// concatenate or join all the queue into one with the.
-			*q = append(start, end...)
-			appended = true
-			break
-		}
-
-		if !appended {
-			*q = append(*q, order)
+		case q[mid].priority < value:
+			low = mid + 1
+		default:
+			high = mid - 1
 		}
 	}
+
+	return low
+
 }
+
+// Add method takes an order and adds it to the queue based on priority.
+func (q *Queue) Add(order *Order) {
+	insertPoint := getInsertionSlot(*q, order.priority)
+
+	if insertPoint > len(*q) - 1 {
+		// when the insert point is at the end of the queue
+		*q = append(*q, order)
+	} else {
+		start := copyQ((*q)[:insertPoint])
+		start = append(start, order)
+		end := copyQ((*q)[insertPoint:])
+
+		// recreate the whole queue
+		*q = append(start, end...)
+	}
+}
+
+
 
 func main() {
 	q := new(Queue)
