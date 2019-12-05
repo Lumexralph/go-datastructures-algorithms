@@ -39,21 +39,23 @@ func copyQ(q Queue) Queue {
 	return append(Queue{}, q...)
 }
 
-// binarySearch method will help to pick a slot to fix the next order
+// insertionSlot method will help to pick a slot to fix the next order
 // with complexity of Olog(n)
-func getInsertionSlot(q Queue, value int) int {
+func insertionSlot(q Queue, value int) int {
 	low := 0
 	high := len(q) - 1
 
 	for low <= high {
 		mid := (high + low) / 2
 
+		fmt.Println(low, high)
+
 		switch {
 		case q[mid].priority == value:
-			if (mid+1) < len(q) && q[mid+1].priority == value {
-				low = mid + 1
+			if i := (mid+1); i < len(q) && q[i].priority == value {
+				low = i
 			} else {
-				return mid + 1
+				return i
 			}
 		case q[mid].priority < value:
 			low = mid + 1
@@ -68,7 +70,7 @@ func getInsertionSlot(q Queue, value int) int {
 
 // Add method takes an order and adds it to the queue based on priority.
 func (q *Queue) Add(order *Order) {
-	insertPoint := getInsertionSlot(*q, order.priority)
+	insertPoint := insertionSlot(*q, order.priority)
 
 	if insertPoint > len(*q) - 1 {
 		// when the insert point is at the end of the queue
