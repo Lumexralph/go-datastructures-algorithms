@@ -37,3 +37,5 @@ Complexity and performance analysis
 [Nil Pointer](https://play.golang.org/p/l3D3LqKnh8H): When you are working with pointers, there is a potential for the program to panic. To avoid panicking, you should check to see if a pointer value is nil prior to trying to access any of the fields or methods defined on it.
 
 [Different ways to create pointers](https://play.golang.org/p/PmsBjmkmFFy)
+
+[Different ways to manipulate string](https://play.golang.org/p/yUe1cxCnUqc)

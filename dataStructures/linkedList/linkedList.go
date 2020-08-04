@@ -1,4 +1,4 @@
-package main
+package linkedlist
 
 import (
 	"fmt"
@@ -14,7 +14,7 @@ type LinkedList struct {
 }
 
 // AddToHead method adds the node to the start of the linked list
-func(linkedList *LinkedList) AddToHead(property int) {
+func (linkedList *LinkedList) AddToHead(property int) {
 	node := Node{
 		property: property,
 		nextNode: nil,
@@ -50,7 +50,7 @@ func (linkedList *LinkedList) GetLastNode() *Node {
 }
 
 // AddToEnd method adds the node at the end of the list
-func(linkedList *LinkedList) AddToEnd(property int) {
+func (linkedList *LinkedList) AddToEnd(property int) {
 	// create new node as the last node
 	newNode := &Node{
 		property: property,
