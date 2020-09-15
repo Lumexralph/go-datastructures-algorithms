@@ -135,7 +135,52 @@ func TestBinarySearchTree_PostOrderTraversal(t *testing.T) {
 	}
 }
 
-// TODO: write benchmark test for ProduceTreeItems and ProduceTreeItemsRecursive
+func generateItems(repeat int) []string {
+	items := []string{"fame", "pad", "tea", "game", "deep", "class", "gopher"}
+	for i := 0; i < repeat; i++ {
+		items = append(items, items...)
+	}
+	return items
+}
+
+func benchmarkProduceItemsRecursive(items []string, b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		binarytree.ProduceTreeItemsRecursive(items...)
+	}
+}
+func BenchmarkProduce7TreeItemsRecursive(b *testing.B) {
+	b.StopTimer()
+	items := generateItems(0)
+	b.StartTimer()
+	benchmarkProduceItemsRecursive(items, b)
+}
+
+func BenchmarkProduce14TreeItemsRecursive(b *testing.B) {
+	b.StopTimer()
+	items := generateItems(1)
+	b.StartTimer()
+	benchmarkProduceItemsRecursive(items, b)
+}
+
+func benchmarkProduceItems(items []string, b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		binarytree.ProduceTreeItems(items...)
+	}
+}
+func BenchmarkProduce7TreeItems(b *testing.B) {
+	b.StopTimer()
+	items := generateItems(0)
+	b.StartTimer()
+	benchmarkProduceItems(items, b)
+}
+
+func BenchmarkProduce14TreeItems(b *testing.B) {
+	b.StopTimer()
+	items := generateItems(1)
+	b.StartTimer()
+	benchmarkProduceItems(items, b)
+}
+
 
 
 
