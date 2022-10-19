@@ -191,3 +191,106 @@ func hashB(str string) int32 {
 	}
 	return sum
 }
+
+// Given a string, find the length of the longest substring in it with no more than K distinct characters.
+//
+// You can assume that K is less than or equal to the length of the given string.
+func longestWithUniqueChar(str string, k int) string {
+	longestSubStr := ""
+
+	for start, end := 0, k; end < len(str); end++ {
+		if !isUniqueCharCount(str[start:end+1], k) {
+			if (end - start) >= len(longestSubStr) {
+				longestSubStr = str[start:end]
+			}
+			start += 1
+		}
+
+	}
+
+	return longestSubStr
+}
+
+func isUniqueCharCount(substr string, k int) bool {
+	charMap := make(map[rune]bool) // Assume ASCII characters
+	count := 0
+
+	for _, char := range substr {
+		if _, ok := charMap[char]; !ok {
+			charMap[char] = true
+			count += 1
+		}
+	}
+
+	return count <= k
+}
+
+//////////////////////////////////////////////////////////////
+//func main() {
+//	fmt.Printf("%s: ", maxSubArrUniqueChar([]byte{'A', 'B', 'C', 'B', 'B', 'C', 'E'}, 3))
+//}
+// You are visiting a farm to collect fruits. The farm has a single row of fruit trees. You will be given two baskets, and your goal is to pick as many fruits as possible to be placed in the given baskets.
+//
+//You will be given an array of characters where each character represents a fruit tree. The farm has following restrictions:
+//
+//Each basket can have only one type of fruit. There is no limit to how many fruit a basket can hold.
+//You can start with any tree, but you can’t skip a tree once you have started.
+//You will pick exactly one fruit from every tree until you cannot, i.e., you will stop when you have to pick from a third fruit type.
+//Write a function to return the maximum number of fruits in both baskets.
+/////////////////
+
+func maxSubArrUniqueChar(arr []byte, k int) []byte {
+	charMap := make(map[byte]bool)
+	var subStr []byte
+	start, end := 0, 0
+
+	for end < len(arr) {
+		charMap[arr[end]] = true
+		fmt.Printf("start: %+v\n", charMap)
+		if len(charMap) <= k {
+			end += 1
+
+			if len(subStr) < len(arr[start:end]) {
+				subStr = arr[start:end]
+			}
+
+		} else {
+			delete(charMap, arr[start])
+			start += 1
+		}
+		fmt.Printf("end: %+v\n", charMap)
+	}
+
+	return subStr
+}
+
+///////////////////////////////////////////////////////
+//func main() {
+//	fmt.Printf("%s: ", longestWithDistinctChars([]byte{'a', 'a', 'b', 'c', 'c', 'b', 'b'}))
+//}
+// Given a string, find the length of the longest substring, which has all distinct characters.
+
+func longestWithDistinctChars(arr []byte) []byte {
+	charMap := make(map[byte]bool)
+	var subStr []byte
+	start, end := 0, 0
+
+	for end < len(arr) {
+		fmt.Printf("start: %+v\n", charMap)
+		if _, ok := charMap[arr[end]]; !ok {
+			charMap[arr[end]] = true
+			end += 1
+
+			if len(subStr) <= len(arr[start:end]) {
+				subStr = arr[start:end]
+			}
+
+		} else {
+			delete(charMap, arr[start])
+			start += 1
+		}
+		fmt.Printf("end: %+v\n", charMap)
+	}
+
+	return subStr
+}

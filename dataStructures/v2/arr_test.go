@@ -177,3 +177,147 @@ func Test_zeroMatrix(t *testing.T) {
 		})
 	}
 }
+
+func Test_binarySearch(t *testing.T) {
+	type args struct {
+		arr  []int
+		item int
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "find the item in the list",
+			args: args{
+				arr:  []int{1, 2, 3, 4, 5, 6, 7},
+				item: 7,
+			},
+			want: true,
+		},
+		{
+			name: "find the item in list with even number length",
+			args: args{
+				arr:  []int{1, 2, 3, 4, 5, 6},
+				item: 4,
+			},
+			want: true,
+		},
+		{
+			name: "cannot find the item in the list",
+			args: args{
+				arr:  []int{1, 2, 3, 4, 5, 6, 7},
+				item: 10,
+			},
+			want: false,
+		},
+		{
+			name: "cannot find the item in list with even number length",
+			args: args{
+				arr:  []int{1, 2, 3, 4, 5, 6},
+				item: 10,
+			},
+			want: false,
+		},
+		{
+			name: "cannot find the item in empty list",
+			args: args{
+				arr:  []int{},
+				item: 4,
+			},
+			want: false,
+		},
+		{
+			name: "find the item in list with one element",
+			args: args{
+				arr:  []int{4},
+				item: 4,
+			},
+			want: true,
+		},
+		{
+			name: "cannot find the item in list with one element",
+			args: args{
+				arr:  []int{5},
+				item: 4,
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := binarySearch(tt.args.arr, tt.args.item); got != tt.want {
+				t.Errorf("binarySearch() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_searchRotatedArr(t *testing.T) {
+	type args struct {
+		nums   []int
+		target int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			name: "target found in sorted rotated array",
+			args: args{
+				nums:   []int{4, 5, 6, 7, 0, 1, 2},
+				target: 0,
+			},
+			want: 4,
+		},
+		{
+			name: "target not found in sorted rotated array",
+			args: args{
+				nums:   []int{4, 5, 6, 7, 0, 1, 2},
+				target: 3,
+			},
+			want: -1,
+		},
+		{
+			name: "target not found in empty array",
+			args: args{
+				nums:   []int{},
+				target: 3,
+			},
+			want: -1,
+		},
+		{
+			name: "target found in array of one element",
+			args: args{
+				nums:   []int{3},
+				target: 3,
+			},
+			want: 0,
+		},
+		{
+			name: "target not found in array of one element",
+			args: args{
+				nums:   []int{3},
+				target: 4,
+			},
+			want: -1,
+		},
+		{
+			name: "target found in sorted rotated array of even number length",
+			args: args{
+				nums:   []int{4, 5, 6, 0, 1, 2},
+				target: 0,
+			},
+			want: 3,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := searchRotatedArr(tt.args.nums, tt.args.target); got != tt.want {
+				t.Errorf("searchRotatedArr() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

@@ -115,3 +115,64 @@ func zeroMatrix(matrix [][]int) [][]int {
 
 	return matrix
 }
+
+func binarySearch(arr []int, item int) bool {
+	if len(arr) == 0 {
+		return false
+	}
+
+	if len(arr) == 1 {
+		return arr[0] == item
+	}
+
+	start := 0
+	end := len(arr) - 1
+	mid := (start + end) / 2
+
+	for start <= end {
+		val := arr[mid]
+		if item == val {
+			return true
+		} else if val > item {
+			end = mid - 1
+		} else {
+			start = mid + 1
+		}
+
+		mid = (start + end) / 2
+	}
+
+	return false
+}
+
+func searchRotatedArr(nums []int, target int) int {
+	if len(nums) == 0 {
+		return -1
+	}
+	if len(nums) == 1 && nums[0] == target {
+		return 0
+	}
+
+	mid := len(nums) / 2
+	leftIndex := mid
+	rightIndex := mid
+
+	// nums of an even number length, for evenly spread of index
+	if len(nums)%2 == 0 {
+		leftIndex = mid - 1
+	}
+
+	for leftIndex >= 0 && rightIndex < len(nums) {
+		if nums[leftIndex] == target {
+			return leftIndex
+		}
+		if nums[rightIndex] == target {
+			return rightIndex
+		}
+
+		rightIndex += 1
+		leftIndex -= 1
+	}
+
+	return -1
+}
