@@ -2,6 +2,7 @@ package v2
 
 import (
 	"fmt"
+	"math"
 	"strings"
 )
 
@@ -293,4 +294,47 @@ func longestWithDistinctChars(arr []byte) []byte {
 	}
 
 	return subStr
+}
+
+//////////////////////////////
+//func main() {
+//	fmt.Printf("%d: ", longestSubstrLength("aabccbb", 3))
+//}
+// Given a string with lowercase letters only, if you are allowed to replace no more than ‘k’ letters with any letter,
+// find the length of the longest substring having the same letters after replacement.
+// Input: String="aabccbb", k=2
+// Output: 5
+// Explanation: Replace the two 'c' with 'b' to have a longest repeating substring "bbbbb".
+
+func longestSubstrLength(str string, k int) int {
+	frequencyMap := make(map[byte]int)
+	var maxRepeatingCount float64 = 0
+	var maxLength float64 = 0
+
+	for start, end := 0, 0; end < len(str); end++ {
+		// slot the new character in the window to
+		// the frequencyMap
+		rightChar := str[end]
+		if _, ok := frequencyMap[rightChar]; !ok {
+			frequencyMap[rightChar] = 0
+
+		}
+		frequencyMap[rightChar] += 1
+
+		maxRepeatingCount = math.Max(maxRepeatingCount, float64(frequencyMap[rightChar]))
+
+		if (end-start+1)-int(maxRepeatingCount) > k {
+			// it means the number of characters that needs to be
+			// replaced in this window is more than k, shrink the window
+			leftChar := str[start]
+			frequencyMap[leftChar] -= 1
+			start += 1
+
+		}
+
+		maxLength = math.Max(maxLength, float64(end-start+1))
+
+	}
+
+	return int(maxLength)
 }
