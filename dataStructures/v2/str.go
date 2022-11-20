@@ -338,3 +338,233 @@ func longestSubstrLength(str string, k int) int {
 
 	return int(maxLength)
 }
+
+////////////////////////////////////////////////////////
+//func main() {
+//	fmt.Printf("%d: ", longestSubArrWithOnes("0100110110011", 3))
+//}
+
+func longestSubArrWithOnes(str string, k int) int {
+	maxRepeatingCount := 0
+	var maxLength float64 = 0
+
+	for start, end := 0, 0; end < len(str); end++ {
+		// slot the new characacter in the window to
+		// the frequencyMap
+		rightChar := str[end]
+		if rightChar == '1' {
+			maxRepeatingCount += 1
+		}
+
+		if (end-start+1)-int(maxRepeatingCount) > k {
+			// it means the number of characters that needs to be
+			// replaced in this window is more than k, shrink the window
+			leftChar := str[start]
+			if leftChar == '1' {
+				maxRepeatingCount -= 1
+			}
+			start += 1
+
+		}
+
+		maxLength = math.Max(maxLength, float64(end-start+1))
+
+	}
+
+	return int(maxLength)
+}
+
+/////////////////////////////////////
+//func main() {
+//	fmt.Printf("%d: ", isStringPermutation("aaacb", "abc"))
+//}
+// Given a string and a pattern, find out if the string contains any permutation of the pattern.
+//
+// Permutation is defined as the re-arranging of the characters of the string
+// Input: String="oidbcaf", Pattern="abc"
+// Output: true
+// Explanation: The string contains "bca" which is a permutation of the given pattern.
+
+func isStringPermutation(str, pattern string) bool {
+	// Assume we are dealing with ASCII characters and not Unicode like UTF-8
+	frequencyMap := generateFrequencyMap(pattern)
+	fmt.Println(frequencyMap)
+	countLength := 0
+
+	for start, end := 0, 0; end < len(str); end++ {
+		rightChar := rune(str[end])
+		fmt.Println(rightChar)
+		if _, ok := frequencyMap[rightChar]; ok {
+			frequencyMap[rightChar] -= 1
+			if count := frequencyMap[rightChar]; count == 0 {
+				countLength += 1
+			}
+
+		}
+
+		if countLength == len(frequencyMap) {
+			fmt.Print(str[start : end+1])
+			return true
+		}
+
+		if end >= len(pattern)-1 {
+			leftChar := rune(str[start])
+			if count, ok := frequencyMap[leftChar]; ok {
+				frequencyMap[leftChar] += 1
+
+				if count == 0 {
+					countLength -= 1
+				}
+
+			}
+			start += 1
+		}
+	}
+
+	return false
+}
+
+func generateFrequencyMap(pattern string) map[rune]int {
+	frequencyMap := make(map[rune]int)
+
+	for _, char := range pattern {
+		if _, ok := frequencyMap[char]; !ok {
+			frequencyMap[char] = 0
+		}
+		frequencyMap[char] += 1
+	}
+
+	return frequencyMap
+}
+
+// ////////////////////////////////////////
+// Given a string and a pattern, find all anagrams of the pattern in the given string.
+// Write a function to return a list of starting indices of the anagrams of the pattern in the given string.
+func main() {
+	fmt.Printf("%+v: ", listAnagramIndices("abbcabc", "abc"))
+}
+
+func listAnagramIndices(str, pattern string) []int {
+	// Assume we are dealing with ASCII characters and not Unicode like UTF-8
+	frequencyMap := generateFrequencyMap(pattern)
+	countLength := 0
+	var indices []int
+
+	for start, end := 0, 0; end < len(str); end++ {
+		rightChar := rune(str[end])
+		if _, ok := frequencyMap[rightChar]; ok {
+			frequencyMap[rightChar] -= 1
+			if count := frequencyMap[rightChar]; count == 0 {
+				countLength += 1
+			}
+
+		}
+
+		if countLength == len(frequencyMap) {
+			fmt.Println(str[start : end+1])
+			indices = append(indices, start)
+		}
+
+		if end >= len(pattern)-1 {
+			leftChar := rune(str[start])
+			if count, ok := frequencyMap[leftChar]; ok {
+				frequencyMap[leftChar] += 1
+
+				if count == 0 {
+					countLength -= 1
+				}
+
+			}
+			start += 1
+		}
+	}
+
+	return indices
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+//func main() {
+//	fmt.Printf("%s: ", minimumWindowSubstring("abbcabc", "abc"))
+//}
+
+//
+
+func minimumWindowSubstring(str, pattern string) string {
+	// Assume we are dealing with ASCII characters and not Unicode like UTF-8
+	frequencyMap := generateFrequencyMap(pattern)
+	countLength, subStrStart, minLength := 0, 0, len(str)
+
+	for start, end := 0, 0; end < len(str); end++ {
+		rightChar := rune(str[end])
+		if _, ok := frequencyMap[rightChar]; ok {
+			frequencyMap[rightChar] -= 1
+
+			if count := frequencyMap[rightChar]; count >= 0 {
+				countLength += 1
+			}
+
+		}
+
+		for countLength == len(pattern) {
+			if minLength >= end-start+1 {
+				minLength = end - start + 1
+				subStrStart = start
+
+			}
+
+			leftChar := rune(str[start])
+			if count, ok := frequencyMap[leftChar]; ok {
+				if count == 0 {
+					countLength -= 1
+				}
+				frequencyMap[leftChar] += 1
+
+			}
+			start += 1
+
+		}
+
+	}
+
+	return str[subStrStart : subStrStart+minLength]
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//func main() {
+//	fmt.Printf("%+v: ", minimumWindowIndices("catfoxcat", "catfox"))
+//}
+
+func minimumWindowIndices(str, pattern string) []int {
+	// Assume we are dealing with ASCII characters and not Unicode like UTF-8
+	charFrequency := generateFrequencyMap(pattern)
+	match := 0
+	var indices []int
+
+	for start, end := 0, 0; end < len(str); end++ {
+		rightChar := rune(str[end])
+		if _, ok := charFrequency[rightChar]; ok {
+			charFrequency[rightChar] -= 1
+			if count := charFrequency[rightChar]; count >= 0 {
+				match += 1
+			}
+		}
+
+		if match == len(pattern) {
+			indices = append(indices, start)
+		}
+
+		if end >= len(pattern)-1 {
+			leftChar := rune(str[start])
+			if count, ok := charFrequency[leftChar]; ok {
+				if count == 0 {
+					match -= 1
+				}
+				charFrequency[leftChar] += 1
+			}
+			start += 1
+		}
+
+	}
+
+	return indices
+}

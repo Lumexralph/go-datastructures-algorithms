@@ -289,3 +289,146 @@ func isLoop(llist *LinkedList) bool {
 
 	return false
 }
+
+///////////////////////////////////////////////////////////////////
+/*
+
+Given the head of a LinkedList and two positions ‘p’ and ‘q’, reverse the LinkedList from position ‘p’ to ‘q’.
+	func main() {
+	llist := New(1)
+	llist.insert(2)
+	llist.insert(3)
+	llist.insert(4)
+	llist.insert(5)
+	llist.insert(6)
+	llist.insert(7)
+	llist.insert(8)
+	llist.insert(9)
+	head := reverseList(llist, 4, 7)
+
+	for head != nil {
+		fmt.Printf("%v->", head.data)
+		head = head.next
+	}
+
+}
+*/
+
+func reverseList(llist *LinkedList, p, q int) *Node {
+	var previous *Node
+	current := llist.head
+
+	// store the node before the pth node
+	// while moving to the node
+	for i := 1; current != nil && i < p; i++ {
+		previous = current
+		current = current.next
+	}
+
+	firstPartLastNode := previous
+	subListLastNode := current
+
+	// reverse the list from p - q
+	var next *Node
+
+	for i := 0; current != nil && i <= q-p; i++ {
+		next = current.next
+		current.next = previous
+		previous = current
+		current = next
+	}
+
+	// join them all together
+	firstPartLastNode.next = previous
+	subListLastNode.next = current
+
+	return llist.head
+}
+
+///////////////////////////////////////////////////////////////////
+/*
+func main() {
+	llist := New(1)
+	llist.insert(2)
+	llist.insert(3)
+	llist.insert(4)
+	llist.insert(5)
+	llist.insert(6)
+	llist.insert(7)
+	llist.insert(8)
+	llist.insert(9)
+	head := reverseSubList(llist, 4, 7)
+
+	for head != nil {
+		fmt.Printf("%v->", head.data)
+		head = head.next
+	}
+
+}
+*/
+func reverseSubList(llist *LinkedList, before, after int) *Node {
+	if before >= after || llist.head == nil {
+		return llist.head
+	}
+
+	var lastPrevious, subListLastNode *Node
+	current := llist.head
+
+	// move the list to before
+	for i := 1; i < before && current != nil; i++ {
+		lastPrevious = current
+		current = current.next
+	}
+	subListLastNode = current
+
+	// reverse sublist
+	var previous, next *Node
+	for i := 0; current != nil && i <= after-before; i++ {
+		next = current.next
+		current.next = previous
+		previous = current
+		current = next
+	}
+
+	lastPrevious.next = previous
+	subListLastNode.next = current
+
+	return llist.head
+}
+
+// /////////////////////////////////////////////////////
+func reverseEveryKSubList(llist *LinkedList, k int) *Node {
+	var previous *Node
+	head := llist.head
+	current := head
+
+	for {
+		var next *Node
+		lastPartPreviousNode := previous
+		subListLastNode := current
+
+		for i := 0; current != nil && i < k; i++ {
+			// do the sublist reversal
+			next = current.next
+			current.next = previous
+			previous = current
+			current = next
+		}
+
+		if lastPartPreviousNode != nil {
+			lastPartPreviousNode.next = previous
+		} else {
+			head = previous
+		}
+
+		subListLastNode.next = current
+
+		if current == nil {
+			break
+		}
+
+		previous = subListLastNode
+	}
+
+	return head
+}
