@@ -51,13 +51,13 @@ func NewBinaryTree(word string) *BinarySearchTree {
 // Search searches for an item, it expects to start from the Root.
 func (bt *BinarySearchTree) Search(item string) string {
 
-	 if result := bt.Root.Search(bt.Root, item); result != nil { // found!
-	 	return result.Item
-	 }
-	 return ""
+	if result := bt.Root.Search(bt.Root, item); result != nil { // found!
+		return result.Item
+	}
+	return ""
 }
 
-//FindMinimum returns the smallest or lowest item item in the tree.
+// FindMinimum returns the smallest or lowest item item in the tree.
 //
 // it works by moving continually through the left subtree till
 // we reach the last tree which we can in a way call the leaf.
@@ -83,7 +83,7 @@ func (bt *BinarySearchTree) FindMaximum() *Tree {
 }
 
 // InOrderTraversal traverse in the order [smallest ... largest] [allLeft ... allRight]
-func (bt *BinarySearchTree) InOrderTraversal(t *Tree, processItem func (string)) {
+func (bt *BinarySearchTree) InOrderTraversal(t *Tree, processItem func(string)) {
 	if t != nil {
 		bt.InOrderTraversal(t.left, processItem)
 		// process the item in the tree
@@ -92,7 +92,7 @@ func (bt *BinarySearchTree) InOrderTraversal(t *Tree, processItem func (string))
 	}
 }
 
-func (bt *BinarySearchTree) PreOrderTraversal(t *Tree, processItem func (string)) {
+func (bt *BinarySearchTree) PreOrderTraversal(t *Tree, processItem func(string)) {
 	if t != nil {
 		// process the item in the tree
 		processItem(t.Item)
@@ -103,7 +103,7 @@ func (bt *BinarySearchTree) PreOrderTraversal(t *Tree, processItem func (string)
 
 // PostOrderTraversal traverses in the order [lastInserted, beforeLastInserted, ..., secondInserted, firstInserted]
 // It reverses the order of insertion.
-func (bt *BinarySearchTree) PostOrderTraversal(t *Tree, processItem func (string)) {
+func (bt *BinarySearchTree) PostOrderTraversal(t *Tree, processItem func(string)) {
 	if t != nil {
 		bt.PostOrderTraversal(t.left, processItem)
 		bt.PostOrderTraversal(t.right, processItem)
@@ -117,7 +117,6 @@ func ProcessItem(itemCollection *[]string) func(string) {
 		*itemCollection = append(*itemCollection, item)
 	}
 }
-
 
 func (bt *BinarySearchTree) RecursiveInsert(currentTree **Tree, item string, parent *Tree) {
 	// currentTree is a pointer to the memory location(also a pointer) where the current node tree
@@ -239,3 +238,66 @@ func ProduceTreeItemsRecursive(items ...string) *BinarySearchTree {
 //	//fmt.Println("minimum: ", minNode.item)
 //	//fmt.Printf("itemcollection:  %q\n", *itemCollection)
 //}
+
+var allPaths [][]int // use a linked list of []int passed to the recursive function
+
+//func main() {
+// Given a binary tree and a number ‘S’, find all paths from root-to-leaf such that the sum of all
+//the node values of each path equals ‘S’.
+//
+//	bt := NewBinaryTree(12)
+//	root := bt.Root
+//	root.left = &Tree{val: 7}
+//	root.right = &Tree{val: 1}
+//	root.left.left = &Tree{val: 9}
+//	root.right.left = &Tree{val: 10}
+//	root.right.right = &Tree{val: 5}
+//
+//	// fmt.Println("Tree has path: ", hasPath(root, 23))
+//	// fmt.Println("Tree has path: ", hasPath(root, 16))
+//
+//	var paths []int
+//
+//	pathsSum(root, 23, paths)
+//	fmt.Printf("all paths: %+v", allPaths)
+//
+//	bt = NewBinaryTree(1)
+//	root = bt.Root
+//	root.left = &Tree{val: 7}
+//	root.right = &Tree{val: 9}
+//	root.left.left = &Tree{val: 4}
+//	root.left.right = &Tree{val: 5}
+//	root.right.left = &Tree{val: 2}
+//	root.right.right = &Tree{val: 7}
+//
+//	pathsSum(root, 12, paths)
+//	fmt.Printf("all paths: %+v", allPaths)
+//}
+
+func pathsSum(root *Tree, val int, paths []int) {
+	if root == nil {
+		return
+	}
+
+	paths = append(paths, root.val)
+	if root.val == val && (root.left == nil || root.right == nil) {
+		allPaths = append(allPaths, paths)
+		paths = []int{}
+	}
+
+	pathsSum(root.left, val-root.val, paths)
+	pathsSum(root.right, val-root.val, paths)
+
+}
+
+func hasPath(tree *Tree, val int) bool {
+	if tree == nil {
+		return false
+	}
+
+	if tree.val == val && (tree.right == nil || tree.left == nil) {
+		return true
+	}
+
+	return hasPath(tree.left, val-tree.val) || hasPath(tree.right, val-tree.val)
+}
