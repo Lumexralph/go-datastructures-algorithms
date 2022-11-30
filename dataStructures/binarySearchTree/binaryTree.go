@@ -301,3 +301,31 @@ func hasPath(tree *Tree, val int) bool {
 
 	return hasPath(tree.left, val-tree.val) || hasPath(tree.right, val-tree.val)
 }
+
+func allPathsSum(root *Tree, pathSum *[]int, prevSum int) {
+	if root == nil {
+		return
+	}
+
+	currSum := (prevSum * 10) + root.val
+	if root.left == nil && root.right == nil { // tree node leaf
+		*pathSum = append(*pathSum, currSum)
+		// currSum = currSum-root.val
+	}
+
+	allPathsSum(root.left, pathSum, currSum)
+	allPathsSum(root.right, pathSum, currSum)
+}
+
+func allPathsSumB(root *Tree, prevSum int) int {
+	if root == nil {
+		return 0
+	}
+
+	currSum := (prevSum * 10) + root.val
+	if root.left == nil && root.right == nil { // tree node leaf
+		return currSum
+	}
+
+	return allPathsSumB(root.left, currSum) + allPathsSumB(root.right, currSum)
+}
