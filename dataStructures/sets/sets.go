@@ -83,4 +83,24 @@ func main() {
 	fmt.Println(set.ContainsElement(4))
 	fmt.Println("Union ", set.Union(anotherSet))
 	fmt.Println("Intersect ", set.InterSect(anotherSet))
+
+	input := []int{1, 5, 3}
+	fmt.Printf("subset: %v\n", createListSubset(input))
+}
+
+func createListSubset(sets []int) [][]int {
+	var listSubset [][]int
+
+	listSubset = append(listSubset, []int{})
+
+	for _, val := range sets {
+		for _, subset := range listSubset {
+			var newSet []int
+			newSet = append(newSet, subset...)
+			newSet = append(newSet, val)
+			listSubset = append(listSubset, newSet)
+		}
+	}
+
+	return listSubset
 }

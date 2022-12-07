@@ -112,3 +112,61 @@ func main() {
 		fmt.Printf("Order %v \n", order)
 	}
 }
+
+// func main() {
+//	h := &maxHeap{2, 1, 5}
+//	heap.Init(h)
+//	heap.Push(h, 3)
+//
+//	fmt.Println("maxHeap.Peek: ", h.Peek())
+//
+//	h1 := &minHeap{2, 1, 5}
+//	heap.Init(h1)
+//	heap.Push(h1, 3)
+//
+//	fmt.Println("minHeap.Peek: ", h1.Peek())
+// }
+
+type maxHeap []int
+
+func (h maxHeap) Len() int           { return len(h) }
+func (h maxHeap) Less(i, j int) bool { return h[i] > h[j] }
+func (h maxHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *maxHeap) Push(val any) {
+	*h = append(*h, val.(int))
+}
+
+func (h *maxHeap) Pop() any {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
+
+func (h maxHeap) Peek() int {
+	return h[0]
+}
+
+type minHeap []int
+
+func (h minHeap) Len() int           { return len(h) }
+func (h minHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h minHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *minHeap) Push(val any) {
+	*h = append(*h, val.(int))
+}
+
+func (h *minHeap) Pop() any {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
+
+func (h minHeap) Peek() int {
+	return h[0]
+}

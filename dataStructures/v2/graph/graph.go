@@ -82,6 +82,4 @@ func depthFirstSearch(root *Node, key string) bool {
 	return found
 }
 
-func visit(node *Node) {
-	var found bool
-}
+// Topological sort
